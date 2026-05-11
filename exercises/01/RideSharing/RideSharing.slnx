@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="RideSharing.Client/RideSharing.Client.csproj" />
-  <Project Path="RideSharing.Contracts/RideSharing.Contracts.csproj" />
-  <Project Path="RideSharing.WebServices/RideSharing.WebServices.csproj" />
-</Solution>
