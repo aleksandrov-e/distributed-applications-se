@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uva Nestum - Rooms</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 10%;
+        }
+        .room-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .room-card:hover { transform: translateY(-5px); }
+        .room-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .room-card-body { padding: 20px; }
+        .room-card-body h3 { font-size: 18px; margin-bottom: 8px; color: #333; }
+        .room-card-body p { font-size: 13px; color: #666; margin-bottom: 15px; }
+        .room-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .room-price { font-size: 20px; font-weight: 700; color: #c8a96e; }
+        .room-capacity { font-size: 13px; color: #888; }
+        .badge-available { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-unavailable { background: #f8d7da; color: #721c24; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .btn-reserve {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #c8a96e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-reserve:hover { background: #b8944e; }
+        .btn-reserve:disabled { background: #ccc; cursor: not-allowed; }
+
+        .rooms-filters {
+            display: flex;
+            gap: 15px;
+            padding: 20px 10%;
+            flex-wrap: wrap;
+            background: #f9f9f9;
+        }
+        .rooms-filters input, .rooms-filters select {
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+        }
+        .rooms-filters input:focus, .rooms-filters select:focus {
+            outline: none;
+            border-color: #c8a96e;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+        }
+        .modal h3 { margin-bottom: 25px; color: #333; font-size: 20px; }
+        .modal .room-summary {
+            background: #f9f4ec;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .modal .room-summary strong { color: #c8a96e; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #555; font-size: 13px; font-weight: 500; }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+        }
+        .form-group input:focus { outline: none; border-color: #c8a96e; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn-cancel { padding: 10px 20px; background: #eee; color: #333; border: none; border-radius: 8px; cursor: pointer; font-family: 'Poppins', sans-serif; }
+        .btn-confirm { padding: 10px 20px; background: #c8a96e; color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; }
+        .btn-confirm:hover { background: #b8944e; }
+
+        .total-price { font-size: 16px; font-weight: 600; color: #c8a96e; margin-top: 10px; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            z-index: 9999;
+            display: none;
+        }
+        .toast.success { background: #2ecc71; }
+        .toast.error { background: #e74c3c; }
+
+        .loading { text-align: center; padding: 60px; color: #888; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <section class="sub-headerr">
+        <nav>
+            <a href="index.html"><img src="images/uva_nestum_logo__1_-removebg-preview.png"></a>
+            <div class="nav-links">
+                <ul>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about.html">ABOUT</a></li>
+                    <li><a href="rooms.html">ROOMS</a></li>
+                    <li><a href="blog.html">BLOG</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+            </div>
+        </nav>
+        <h1>Our Rooms</h1>
+    </section>
+
+    <div class="rooms-filters">
+        <input type="text" id="filterName" placeholder="Search by name..." oninput="loadRooms()">
+        <select id="filterType" onchange="loadRooms()">
+            <option value="">All Types</option>
+            <option value="VIP">VIP</option>
+            <option value="Business">Business</option>
+            <option value="Normal">Normal</option>
+        </select>
+        <select id="filterAvailable" onchange="loadRooms()">
+            <option value="">All Status</option>
+            <option value="1">Available</option>
+            <option value="0">Unavailable</option>
+        </select>
+        <select id="sortBy" onchange="loadRooms()">
+            <option value="id">Default</option>
+            <option value="price">Price: Low to High</option>
+            <option value="name">Name A-Z</option>
+        </select>
+    </div>
+
+    <div id="roomsContainer" class="rooms-grid">
+        <div class="loading">Loading rooms...</div>
+    </div>
+
+    <!-- RESERVATION MODAL -->
+    <div class="modal-overlay" id="reservationModal">
+        <div class="modal">
+            <h3>Make a Reservation</h3>
+            <div class="room-summary" id="roomSummary"></div>
+            <input type="hidden" id="selectedRoomId">
+            <input type="hidden" id="selectedRoomPrice">
+            <div class="form-group">
+                <label>Your Name *</label>
+                <input type="text" id="guestName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="guestEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Check-In Date *</label>
+                <input type="date" id="checkIn" onchange="calculatePrice()">
+            </div>
+            <div class="form-group">
+                <label>Check-Out Date *</label>
+                <input type="date" id="checkOut" onchange="calculatePrice()">
+            </div>
+            <div class="total-price" id="totalPriceDisplay"></div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="makeReservation()">Confirm Reservation</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <section class="footer">
+        <h4>Where You Can Find Us</h4>
+        <p>Nestled in the heart of nature, Uva Nestum Wine & SPA awaits you.</p>
+        <div class="icons">
+            <i class="fa fa-facebook"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-instagram"></i>
+            <i class="fa fa-linkedin"></i>
+        </div>
+    </section>
+
+    <script>
+        const API = 'http://localhost:3000/api';
+
+        const roomImages = {
+            'VIP': 'images/vip.jpg',
+            'Business': 'images/buisness.jpg',
+            'Normal': 'images/normal.jpg'
+        };
+
+        async function loadRooms() {
+            const name = document.getElementById('filterName').value;
+            const type = document.getElementById('filterType').value;
+            const isAvailable = document.getElementById('filterAvailable').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let url = `${API}/rooms?limit=50&sortBy=${sortBy}`;
+            if (name) url += `&name=${name}`;
+            if (type) url += `&type=${type}`;
+            if (isAvailable !== '') url += `&isAvailable=${isAvailable}`;
+
+            const container = document.getElementById('roomsContainer');
+            container.innerHTML = '<div class="loading">Loading rooms...</div>';
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.data.length === 0) {
+                    container.innerHTML = '<div class="loading">No rooms found.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                data.data.forEach(room => {
+                    const img = roomImages[room.type] || 'images/normal.jpg';
+                    container.innerHTML += `
+                        <div class="room-card">
+                            <img src="${img}" alt="${room.name}">
+                            <div class="room-card-body">
+                                <h3>${room.name}</h3>
+                                <p>${room.description || 'A comfortable room for your stay.'}</p>
+                                <div class="room-meta">
+                                    <span class="room-price">${room.price} BGN<small>/night</small></span>
+                                    <span class="room-capacity"><i class="fa fa-user"></i> ${room.capacity} guests</span>
+                                </div>
+                                <div style="margin-bottom:15px">
+                                    <span class="${room.isAvailable ? 'badge-available' : 'badge-unavailable'}">
+                                        ${room.isAvailable ? 'Available' : 'Not Available'}
+                                    </span>
+                                </div>
+                                <button class="btn-reserve" 
+                                    ${!room.isAvailable ? 'disabled' : ''}
+                                    onclick="openReservation(${room.id}, '${room.name}', ${room.price}, '${room.type}')">
+                                    ${room.isAvailable ? 'Reserve Now' : 'Not Available'}
+                                </button>
+                            </div>
+                        </div>`;
+                });
+            } catch (err) {
+                container.innerHTML = '<div class="loading">Error loading rooms. Make sure the server is running.</div>';
+            }
+        }
+
+        function openReservation(id, name, price, type) {
+            document.getElementById('selectedRoomId').value = id;
+            document.getElementById('selectedRoomPrice').value = price;
+            document.getElementById('roomSummary').innerHTML = `
+                <strong>${name}</strong> — ${type} Class<br>
+                Price: <strong>${price} BGN / night</strong>`;
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestEmail').value = '';
+            document.getElementById('checkIn').value = '';
+            document.getElementById('checkOut').value = '';
+            document.getElementById('totalPriceDisplay').textContent = '';
+            document.getElementById('reservationModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('reservationModal').classList.remove('open');
+        }
+
+        function calculatePrice() {
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            const price = document.getElementById('selectedRoomPrice').value;
+            if (checkIn && checkOut) {
+                const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
+                if (nights > 0) {
+                    document.getElementById('totalPriceDisplay').textContent =
+                        `Total: ${nights} night(s) × ${price} BGN = ${nights * price} BGN`;
+                }
+            }
+        }
+
+        async function makeReservation() {
+            const roomId = document.getElementById('selectedRoomId').value;
+            const guestName = document.getElementById('guestName').value;
+            const guestEmail = document.getElementById('guestEmail').value;
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+
+            if (!guestName || !guestEmail || !checkIn || !checkOut) {
+                showToast('Please fill all fields.', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/reservations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ roomId: Number(roomId), guestName, guestEmail, checkIn, checkOut })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    closeModal();
+                    showToast(`Reservation confirmed! Total: ${data.totalPrice} BGN`);
+                    loadRooms();
+                } else {
+                    showToast(data.detail || 'Error making reservation.', 'error');
+                }
+            } catch (err) {
+                showToast('Cannot connect to server.', 'error');
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type}`;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 4000);
+        }
+
+        loadRooms();
+    </script>
+</body>
+</html>

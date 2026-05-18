@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uva Nestum</title>
+    <link rel ="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<script>
+    window.onload = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const navUser = document.createElement('div');
+        navUser.style.cssText = 'display:flex;align-items:center;gap:15px;';
+        let html = `<span style="color:white;font-size:13px">👤 ${user.username}</span>`;
+        if (user.role === 'admin') {
+            html += `<a href="admin-dashboard.html" style="padding:8px 18px;background:transparent;color:#c8a96e;border:2px solid #c8a96e;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;">Admin Panel</a>`;
+        }
+        html += `<button onclick="localStorage.clear();window.location.href='login.html'" style="padding:8px 18px;background:#c8a96e;color:white;border:none;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;">Logout</button>`;
+        navUser.innerHTML = html;
+        document.querySelector('nav').appendChild(navUser);
+    };
+</script>
+<body>
+   <section class ="sub-heade">
+    <nav>
+        <a href ="index.html"><img src="images/uva_nestum_logo__1_-removebg-preview.png"></a>
+        <div class="nav-links">
+            <ul>
+              <li><a href="index.html">HOME</a></li>
+              <li><a href="about.html">ABOUT</a></li>
+              <li><a href="rooms.html">ROOMS</a></li>
+              <li><a href="blog.html">BLOG</a></li>
+              <li><a href="contact.html">CONTACT</a></li>
+              
+            </ul>
+          
+        </div>
+    </nav>
+    <h1>Contact Us</h1>
+   </section>
+   <section class="location">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d94665.26395312227!2d24.65847328982546!3d42.14409142047523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd108a248763d%3A0x6470d1fa6f1338a0!2z0J_Qu9C-0LLQtNC40LI!5e0!3m2!1sbg!2sbg!4v1733146901058!5m2!1sbg!2sbg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+   </section>
+   <section class="contatct-us">
+   <div class="row">
+    <div class="contact-col">
+        <div>
+            <i class="fa fa-home"></i> 
+            <span>
+                <h5>Road Preslav, AVC Building</h5>
+                <p>Plovdiv, Karnataka, IN</p>
+            </span> 
+        </div>
+        <div>
+            <i class="fa fa-phone"></i> 
+            <span>
+                <h5>+359 492319454</h5>
+                <p>Monday to Saturday, 10 AM to 6PM</p>
+            </span> 
+        </div>
+        <div>
+            <i class="fa fa-envelope-o"></i> 
+            <span>
+                <h5>aleksandrov8832@gmail.com</h5>
+                <p>Email us ur query</p>
+            </span> 
+        </div>
+    </div>
+   </div>
+
+   </section>
+
+  
+   <section class="footer">
+    <h4>Where You Can Find Us</h4>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, maiores at eos repellendus incidunt adipisci voluptatibus possimus aspernatur optio minus sapiente?</p>
+    <div class="icons">
+        <i class="fa fa-facebook"></i>
+        <i class="fa fa-twitter"></i>
+        <i class="fa fa-instagram"></i>
+        <i class="fa fa-linkedin"></i>
+
+    </div>
+   </section>
+
+    
+
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+body {
+    background-color: #f7f9fc;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    color: #007bff;
+  }
+
+  .photo-gallery {
+    padding: 30px 0;
+  }
+
+  .gallery-grid {
+    gap: 20px;
+  }
+
+  .gallery-item {
+    display: block;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .video-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .video-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .video-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .lightbox-modal .lightbox-content {
+    text-align: center;
+  }
+
+  .lightbox-modal img {
+    max-width: 100%;
+    max-height: 80vh;
+  }
+  .header-container {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 20px; 
+  }
+  
+  .header-container .logo {
+    width: 50px; 
+    height: auto;
+  }
+  
+  .header-title {
+    font-size: 1.5rem; 
+    text-align: left;
+  }
+  body {
+    background-image:linear-gradient(rgba(123, 110, 93, 0.7),rgba(88, 48, 2, 0.7)) ,url('https://media.istockphoto.com/id/503016934/photo/entrance-of-luxury-hotel.jpg?s=612x612&w=0&k=20&c=DXFzucB2xWGf3PI6_yjhLKDvrFcGlOpOjXh6KDI8rqU='); 
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+    background-repeat: no-repeat; 
+  }
+  .title{
+    margin-bottom: 50px;
+    color: rgb(0, 0, 0);
+    
+  }
+  .text-center{
+    font-size: 70px;
+    
+  }
+  
+.header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.header-container img {
+  max-width: 100%;
+  height: auto;
+  max-height: 150px; 
+}
+
+
+.title {
+  text-align: center;
+  margin-top: 10px;
+  padding: 0 15px;
+}
+
+
+.title h1 {
+  font-size: 2rem; 
+}
+
+
+@media (min-width: 768px) {
+  .title h1 {
+    font-size: 3rem;
+  }
+}
+
+
+@media (min-width: 992px) {
+  .title h1 {
+    font-size: 4rem;
+  }
+}
+
+ 

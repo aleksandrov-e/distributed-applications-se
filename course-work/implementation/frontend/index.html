@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uva Nestum</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-user span {
+            color: white;
+            font-size: 13px;
+        }
+        .btn-logout {
+            padding: 8px 18px;
+            background: #c8a96e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn-logout:hover { background: #b8944e; }
+        .btn-admin {
+            padding: 8px 18px;
+            background: transparent;
+            color: #c8a96e;
+            border: 2px solid #c8a96e;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-admin:hover { background: #c8a96e; color: white; }
+    </style>
+</head>
+<body>
+    <section class="header">
+        <nav>
+            <a href="index.html"><img src="images/uva_nestum_logo__1_-removebg-preview.png" alt="Logo"></a>
+            <div class="nav-links" id="navLinks">
+                <ul>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about.html">ABOUT</a></li>
+                    <li><a href="rooms.html">ROOMS</a></li>
+                    <li><a href="blog.html">BLOG</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+            </div>
+            <div class="nav-user" id="navUser"></div>
+        </nav>
+        <div class="text-box">
+            <h1>Welcome to Uva Nestum Wine & SPA</h1>
+            <p>Discover a serene escape where luxury meets nature. Experience the finest hospitality, crafted to indulge your senses and leave you with unforgettable memories.<br>From exquisite wines to rejuvenating spa treatments, let us take you on a journey of pure relaxation and delight.</p>
+            <a href="rooms.html" class="button">Explore Our Rooms</a>
+        </div>
+    </section>
+
+    <section class="rooms">
+        <h1>Rooms We Offer</h1>
+        <p>Choose from our selection of premium accommodations</p>
+        <div class="rows">
+            <div class="rooms-s">
+                <h3>Vip Class</h3>
+                <p>Experience unparalleled luxury and comfort. Our VIP rooms are tailored to provide you with an exclusive retreat, featuring premium amenities and personalized services for a truly unforgettable stay.</p>
+            </div>
+            <div class="rooms-s">
+                <h3>Business Class</h3>
+                <p>Designed for the modern traveler, our Business Class rooms combine style and functionality. Enjoy a seamless blend of comfort and efficiency, perfect for work or relaxation.</p>
+            </div>
+            <div class="rooms-s">
+                <h3>Normal Class</h3>
+                <p>Discover cozy and affordable accommodations. Our Normal Class rooms offer all the essential comforts you need for a relaxing and enjoyable stay.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="campus">
+        <h1>Our Global Campus</h1>
+        <p>Find us in the world's most beautiful destinations</p>
+        <div class="rows">
+            <div class="campus-col">
+                <img src="images/london-time-lucia-vicari.jpg" alt="London">
+                <div class="layer"><h3>LONDON</h3></div>
+            </div>
+            <div class="campus-col">
+                <img src="images/new-york.jpeg" alt="New York">
+                <div class="layer"><h3>NEW YORK</h3></div>
+            </div>
+            <div class="campus-col">
+                <img src="images/TAL-dc-lead-image-WDCTG1223-dea2e651476348bb8e249882f63909ed.jpg" alt="Washington">
+                <div class="layer"><h3>WASHINGTON</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opinions">
+        <h1>What Our Guests Say</h1>
+        <p>Real experiences from our valued guests</p>
+        <div class="row">
+            <div class="opinions-col">
+                <img src="images/portrait_xl_70_IMG_9115.jpeg" alt="Guest">
+                <div>
+                    <p>An absolutely wonderful experience. The spa treatments were divine and the wine selection was outstanding. Will definitely return!</p>
+                    <h3>Bob Memonik</h3>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                </div>
+            </div>
+            <div class="opinions-col">
+                <img src="images/photo-1508002366005-75a695ee2d17.jpg" alt="Guest">
+                <div>
+                    <p>The VIP suite exceeded all expectations. Breathtaking views, impeccable service and the most relaxing stay I have ever had.</p>
+                    <h3>Cristine Brey</h3>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h1>Take Advantage of Our Site and Make Your Reservation Online!</h1>
+        <a href="rooms.html" class="button">BOOK NOW</a>
+    </section>
+
+    <section class="footer">
+        <h4>Where You Can Find Us</h4>
+        <p>Nestled in the heart of nature, Uva Nestum Wine & SPA awaits you.</p>
+        <div class="icons">
+            <i class="fa fa-facebook"></i>
+            <i class="fa fa-twitter"></i>
+            <i class="fa fa-instagram"></i>
+            <i class="fa fa-linkedin"></i>
+        </div>
+    </section>
+
+    <script>
+        window.onload = () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const navUser = document.getElementById('navUser');
+
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let html = `<span>👤 ${user.username}</span>`;
+
+            if (user.role === 'admin') {
+                html += `<a href="admin-dashboard.html" class="btn-admin">Admin Panel</a>`;
+            }
+
+            html += `<button class="btn-logout" onclick="logout()">Logout</button>`;
+            navUser.innerHTML = html;
+        };
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

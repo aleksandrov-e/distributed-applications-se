@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uva Nestum</title>
+    <link rel ="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<script>
+    window.onload = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const navUser = document.createElement('div');
+        navUser.style.cssText = 'display:flex;align-items:center;gap:15px;';
+        let html = `<span style="color:white;font-size:13px">👤 ${user.username}</span>`;
+        if (user.role === 'admin') {
+            html += `<a href="admin-dashboard.html" style="padding:8px 18px;background:transparent;color:#c8a96e;border:2px solid #c8a96e;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;">Admin Panel</a>`;
+        }
+        html += `<button onclick="localStorage.clear();window.location.href='login.html'" style="padding:8px 18px;background:#c8a96e;color:white;border:none;border-radius:6px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;">Logout</button>`;
+        navUser.innerHTML = html;
+        document.querySelector('nav').appendChild(navUser);
+    };
+</script>
+<body>
+   <section class ="sub-header">
+    <nav>
+        <a href ="index.html"><img src="images/uva_nestum_logo__1_-removebg-preview.png"></a>
+        <div class="nav-links">
+            <ul>
+              <li><a href="index.html">HOME</a></li>
+              <li><a href="about.html">ABOUT</a></li>
+              <li><a href="rooms.html">ROOMS</a></li>
+              <li><a href="blog.html">BLOG</a></li>
+              <li><a href="contact.html">CONTACT</a></li>
+              
+            </ul>
+          
+        </div>
+    </nav>
+    <h1>Our Certificate & Online Successes For 2025</h1>
+   </section>
+   <section class ="blog-content">
+    <div class="row">
+        <div class="blog-left">
+            <img src="images/certificate.jpg">
+            <h2>Our Certificate & Online Successes For 2025</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed et provident sapiente blanditiis vel? Assumenda laborum dignissimos, sit harum perferendis sapiente tempore tenetur ipsam quod! Perferendis nostrum minima inventore nisi!<br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, odio voluptas. Hic deleniti ipsam quibusdam eos? Esse vel, quam doloribus fuga suscipit tempore magnam veritatis fugiat architecto. Delectus, rem porro.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore fuga voluptatum vitae omnis consequuntur ab beatae vero iste explicabo sint quos quidem totam dignissimos iure, nihil ipsum! Cumque, nisi voluptates.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus similique rem sit deleniti ab, quibusdam natus consequatur alias itaque odio voluptatem, expedita, eum delectus beatae atque distinctio iste nemo dignissimos!Lorem </p>
+        </div>
+        <div class="blog-right">
+            <h3>Post Categories And Free Rooms</h3>
+            <div>
+                <span>Buisness Analytics</span>
+                <span>21</span>
+            </div>
+            <div>
+                <span>Vip class</span>
+                <span>24</span>
+            </div>
+            <div>
+                <span>Normal Class</span>
+                <span>101</span>
+            </div>
+            <div>
+                <span>Buisness Class</span>
+                <span>50</span>
+            </div>
+            <div>
+                <span>Mezonet</span>
+                <span>21</span>
+            </div>
+        </div>
+    </div>
+   </section>
+   
+   
+  
+   <section class="footer">
+    <h4>Where You Can Find Us</h4>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, maiores at eos repellendus incidunt adipisci voluptatibus possimus aspernatur optio minus sapiente?</p>
+    <div class="icons">
+        <i class="fa fa-facebook"></i>
+        <i class="fa fa-twitter"></i>
+        <i class="fa fa-instagram"></i>
+        <i class="fa fa-linkedin"></i>
+
+    </div>
+   </section>
+
+    
+
+
+</body>
+</html>
