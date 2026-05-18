@@ -1,0 +1,924 @@
+openapi: 3.0.3
+info:
+  title: Uva Nestum Wine & SPA Hotel API
+  description: >
+    REST API за управление на хотел Uva Nestum Wine & SPA.
+    Системата поддържа управление на стаи, резервации и потребители,
+    с JWT автентикация и пълни CRUD операции.
+  version: 1.0.0
+  contact:
+    name: Студент
+    email: student@uni-plovdiv.bg
+
+servers:
+  - url: http://localhost:3000/api
+    description: Локален сървър за разработка
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          maxLength: 50
+          example: "ivan_petrov"
+        email:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        phone:
+          type: string
+          maxLength: 20
+          nullable: true
+          example: "+359888123456"
+        role:
+          type: string
+          enum: [guest, admin]
+          example: "guest"
+
+    UserRegisterRequest:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+          maxLength: 50
+          example: "ivan_petrov"
+        email:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        password:
+          type: string
+          minLength: 6
+          example: "secret123"
+        phone:
+          type: string
+          maxLength: 20
+          nullable: true
+          example: "+359888123456"
+
+    UserLoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          example: "ivan@example.com"
+        password:
+          type: string
+          example: "secret123"
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 50
+          example: "ivan_petrov"
+        email:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        password:
+          type: string
+          minLength: 6
+          example: "newpassword123"
+        phone:
+          type: string
+          maxLength: 20
+          nullable: true
+          example: "+359888123456"
+        role:
+          type: string
+          enum: [guest, admin]
+          example: "guest"
+
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Login successful."
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user:
+          $ref: '#/components/schemas/User'
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          maxLength: 100
+          example: "Луксозна стая Мерло"
+        type:
+          type: string
+          maxLength: 50
+          example: "double"
+        price:
+          type: number
+          format: double
+          example: 150.00
+        capacity:
+          type: integer
+          example: 2
+        description:
+          type: string
+          maxLength: 500
+          nullable: true
+          example: "Просторна стая с изглед към лозята."
+        isAvailable:
+          type: integer
+          enum: [0, 1]
+          example: 1
+
+    RoomRequest:
+      type: object
+      required: [name, type, price, capacity]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: "Луксозна стая Мерло"
+        type:
+          type: string
+          maxLength: 50
+          example: "double"
+        price:
+          type: number
+          format: double
+          example: 150.00
+        capacity:
+          type: integer
+          example: 2
+        description:
+          type: string
+          maxLength: 500
+          nullable: true
+          example: "Просторна стая с изглед към лозята."
+        isAvailable:
+          type: integer
+          enum: [0, 1]
+          example: 1
+
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        roomId:
+          type: integer
+          example: 2
+        guestName:
+          type: string
+          maxLength: 100
+          example: "Иван Петров"
+        guestEmail:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        checkIn:
+          type: string
+          format: date
+          example: "2025-06-01"
+        checkOut:
+          type: string
+          format: date
+          example: "2025-06-05"
+        totalPrice:
+          type: number
+          format: double
+          example: 600.00
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled]
+          example: "pending"
+
+    ReservationRequest:
+      type: object
+      required: [roomId, guestName, guestEmail, checkIn, checkOut]
+      properties:
+        roomId:
+          type: integer
+          example: 2
+        guestName:
+          type: string
+          maxLength: 100
+          example: "Иван Петров"
+        guestEmail:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        checkIn:
+          type: string
+          format: date
+          example: "2025-06-01"
+        checkOut:
+          type: string
+          format: date
+          example: "2025-06-05"
+
+    ReservationUpdateRequest:
+      type: object
+      properties:
+        guestName:
+          type: string
+          maxLength: 100
+          example: "Иван Петров"
+        guestEmail:
+          type: string
+          maxLength: 100
+          example: "ivan@example.com"
+        checkIn:
+          type: string
+          format: date
+          example: "2025-06-01"
+        checkOut:
+          type: string
+          format: date
+          example: "2025-06-05"
+        status:
+          type: string
+          enum: [pending, confirmed, cancelled]
+          example: "confirmed"
+
+    PaginatedUsers:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    PaginatedRooms:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+
+    PaginatedReservations:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation successful."
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: "Bad Request"
+        detail:
+          type: string
+          example: "Validation failed."
+
+paths:
+
+  # ──────────────────────────────────────────
+  # AUTH
+  # ──────────────────────────────────────────
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Регистрация на нов потребител
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      responses:
+        '201':
+          description: Успешна регистрация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User registered successfully."
+                  userId:
+                    type: integer
+                    example: 5
+        '400':
+          description: Невалидни данни
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Потребителят вече съществува
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Вход в системата
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: Успешен вход — връща JWT токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Липсващи полета
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Грешен email или парола
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth:
+    get:
+      tags: [Users]
+      summary: Списък с всички потребители
+      description: Изисква JWT токен. Поддържа филтриране, pagination и sorting.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: Филтър по потребителско име
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: Филтър по email
+        - in: query
+          name: role
+          schema:
+            type: string
+            enum: [guest, admin]
+          description: Филтър по роля
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [id, username, email, role]
+            default: id
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: ASC
+      responses:
+        '200':
+          description: Списък с потребители
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUsers'
+        '401':
+          description: Невалиден или липсващ токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/{id}:
+    get:
+      tags: [Users]
+      summary: Получи потребител по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Потребителят е намерен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Потребителят не е намерен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Users]
+      summary: Редактиране на потребител
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Успешно редактиран
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Невалидни данни
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Потребителят не е намерен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Users]
+      summary: Изтриване на потребител
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешно изтрит
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Потребителят не е намерен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ──────────────────────────────────────────
+  # ROOMS
+  # ──────────────────────────────────────────
+
+  /rooms:
+    get:
+      tags: [Rooms]
+      summary: Списък с всички стаи
+      description: Публичен достъп. Поддържа филтриране, pagination и sorting.
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Филтър по име
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: Филтър по тип стая
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+          description: Минимална цена
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+          description: Максимална цена
+        - in: query
+          name: isAvailable
+          schema:
+            type: integer
+            enum: [0, 1]
+          description: Наличност
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [id, name, type, price, capacity]
+            default: id
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: ASC
+      responses:
+        '200':
+          description: Списък с стаи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRooms'
+
+    post:
+      tags: [Rooms]
+      summary: Добавяне на нова стая
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+      responses:
+        '201':
+          description: Стаята е създадена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Room created successfully."
+                  roomId:
+                    type: integer
+                    example: 3
+        '400':
+          description: Невалидни данни
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Невалиден токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /rooms/{id}:
+    get:
+      tags: [Rooms]
+      summary: Получи стая по ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Стаята е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '404':
+          description: Стаята не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Rooms]
+      summary: Редактиране на стая
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+      responses:
+        '200':
+          description: Успешно редактирана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Стаята не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Rooms]
+      summary: Изтриване на стая
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешно изтрита
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Стаята не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ──────────────────────────────────────────
+  # RESERVATIONS
+  # ──────────────────────────────────────────
+
+  /reservations:
+    get:
+      tags: [Reservations]
+      summary: Списък с всички резервации
+      description: Изисква JWT токен. Поддържа филтриране, pagination и sorting.
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: guestName
+          schema:
+            type: string
+          description: Филтър по име на гост
+        - in: query
+          name: guestEmail
+          schema:
+            type: string
+          description: Филтър по email на гост
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, confirmed, cancelled]
+          description: Филтър по статус
+        - in: query
+          name: checkIn
+          schema:
+            type: string
+            format: date
+          description: Резервации от тази дата нататък
+        - in: query
+          name: checkOut
+          schema:
+            type: string
+            format: date
+          description: Резервации до тази дата
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [id, guestName, checkIn, checkOut, totalPrice, status]
+            default: id
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: ASC
+      responses:
+        '200':
+          description: Списък с резервации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReservations'
+        '401':
+          description: Невалиден токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [Reservations]
+      summary: Създаване на резервация
+      description: Публичен достъп. Автоматично изчислява totalPrice.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+      responses:
+        '201':
+          description: Резервацията е създадена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Reservation created successfully."
+                  reservationId:
+                    type: integer
+                    example: 7
+                  totalPrice:
+                    type: number
+                    example: 600.00
+        '400':
+          description: Невалидни данни или стаята не е налична
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Стаята не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /reservations/{id}:
+    get:
+      tags: [Reservations]
+      summary: Получи резервация по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Резервацията е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '404':
+          description: Резервацията не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Reservations]
+      summary: Редактиране на резервация
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationUpdateRequest'
+      responses:
+        '200':
+          description: Успешно редактирана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Резервацията не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Reservations]
+      summary: Изтриване на резервация
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешно изтрита
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Резервацията не е намерена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
